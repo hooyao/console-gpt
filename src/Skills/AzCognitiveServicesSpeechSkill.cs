@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+using ConsoleGPT.Configuration;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.Extensions.Logging;
@@ -32,14 +32,14 @@ namespace ConsoleGPT.Skills
             _audioConfig = AudioConfig.FromDefaultMicrophoneInput();
 
             // Build a speech configuration from our settings
-            var speechConfig = SpeechConfig.FromSubscription(_options.Key, _options.Region);
-            speechConfig.SpeechRecognitionLanguage = _options.SpeechRecognitionLanguage;
-            speechConfig.SetProperty(PropertyId.SpeechServiceResponse_PostProcessingOption, "TrueText");
-            speechConfig.SpeechSynthesisVoiceName = _options.SpeechSynthesisVoiceName;
+            // var speechConfig = SpeechConfig.FromSubscription(_options.Key, _options.Region);
+            // speechConfig.SpeechRecognitionLanguage = _options.SpeechRecognitionLanguage;
+            // speechConfig.SetProperty(PropertyId.SpeechServiceResponse_PostProcessingOption, "TrueText");
+            // speechConfig.SpeechSynthesisVoiceName = _options.SpeechSynthesisVoiceName;
 
             // Create the speech synthesizer and recognizer
-            _speechRecognizer = new SpeechRecognizer(speechConfig, _audioConfig);           
-            _speechSynthesizer = new SpeechSynthesizer(speechConfig);
+            // _speechRecognizer = new SpeechRecognizer(speechConfig, _audioConfig);           
+            // _speechSynthesizer = new SpeechSynthesizer(speechConfig);
         }
 
         /// <summary>
@@ -82,18 +82,18 @@ namespace ConsoleGPT.Skills
         public async Task<string> Respond(string message, SKContext context)
         {
             // Check if we have a message to speak
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                _logger.LogInformation($"Speaking: {message}");
-
-                // Build some SSML with the text to speak
-                string ssml = GenerateSsml(message, _options.SpeechSynthesisVoiceName);
-
-                _logger.LogDebug(ssml);
-
-                // Speak the SSML
-                await _speechSynthesizer.SpeakSsmlAsync(ssml);
-            }
+            // if (!string.IsNullOrWhiteSpace(message))
+            // {
+            //     _logger.LogInformation($"Speaking: {message}");
+            //
+            //     // Build some SSML with the text to speak
+            //     string ssml = GenerateSsml(message, _options.SpeechSynthesisVoiceName);
+            //
+            //     _logger.LogDebug(ssml);
+            //
+            //     // Speak the SSML
+            //     await _speechSynthesizer.SpeakSsmlAsync(ssml);
+            // }
 
             // Return the message so the next function in the pipeline can use it
             return message;
@@ -112,14 +112,14 @@ namespace ConsoleGPT.Skills
         /// <summary>
         /// Generate speech synthesis markup language (SSML) from a message for the given voice.
         /// </summary>
-        private string GenerateSsml(string message, string voiceName)
-            => "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" xml:lang=\"en-US\">" +
-                $"<voice name=\"{voiceName}\">" +
-                    $"<prosody rate=\"{_options.Rate}\">" +
-                        $"{message}" +
-                    "</prosody>" +
-                    "</voice>" +
-                "</speak>";
+        // private string GenerateSsml(string message, string voiceName)
+        //     => "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" xml:lang=\"en-US\">" +
+        //         $"<voice name=\"{voiceName}\">" +
+        //             $"<prosody rate=\"{_options.Rate}\">" +
+        //                 $"{message}" +
+        //             "</prosody>" +
+        //             "</voice>" +
+        //         "</speak>";
 
         /// <summary>
         /// Dispose of the speech synthesizer and recognizer

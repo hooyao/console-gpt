@@ -1,8 +1,9 @@
+using ConsoleGPT.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.AI;
 using Microsoft.SemanticKernel.AI.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.AI.OpenAI.ChatCompletion;
 using Microsoft.SemanticKernel.SkillDefinition;
 
 namespace ConsoleGPT.Skills
@@ -17,26 +18,29 @@ namespace ConsoleGPT.Skills
         private readonly ChatRequestSettings _chatRequestSettings;
         
         public ChatSkill(IKernel semanticKernel,
-                         IOptions<OpenAiServiceOptions> openAIOptions)
+                         IOptions<AzureCognitiveServicesOptions> azureCognitiveServiceOptions)
         {
             // Set up the chat request settings
             _chatRequestSettings = new ChatRequestSettings()
             {
-                MaxTokens = openAIOptions.Value.MaxTokens,
-                Temperature = openAIOptions.Value.Temperature,
-                FrequencyPenalty = openAIOptions.Value.FrequencyPenalty,
-                PresencePenalty = openAIOptions.Value.PresencePenalty,
-                TopP = openAIOptions.Value.TopP
+                MaxTokens = azureCognitiveServiceOptions.Value.MaxTokens,
+                Temperature = azureCognitiveServiceOptions.Value.Temperature,
+                FrequencyPenalty = azureCognitiveServiceOptions.Value.FrequencyPenalty,
+                PresencePenalty = azureCognitiveServiceOptions.Value.PresencePenalty,
+                TopP = azureCognitiveServiceOptions.Value.TopP
             };
 
             // Configure the semantic kernel
-            semanticKernel.Config.AddOpenAIChatCompletionService("chat", openAIOptions.Value.ChatModel,
-                openAIOptions.Value.Key);
+            semanticKernel.Config.AddAzureChatCompletionService(
+                azureCognitiveServiceOptions.Value.DeploymentName,
+                azureCognitiveServiceOptions.Value.Endpoint,
+                azureCognitiveServiceOptions.Value.Key);
+
 
             // Set up the chat completion and history - the history is used to keep track of the conversation
             // and is part of the prompt sent to ChatGPT to allow a continuous conversation
             _chatCompletion = semanticKernel.GetService<IChatCompletion>();
-            _chatHistory = (OpenAIChatHistory)_chatCompletion.CreateNewChat(openAIOptions.Value.SystemPrompt);
+            _chatHistory = (OpenAIChatHistory)_chatCompletion.CreateNewChat(azureCognitiveServiceOptions.Value.SystemPrompt);
         }
 
         /// <summary>
@@ -85,16 +89,13 @@ namespace ConsoleGPT.Skills
                 var role = message.AuthorRole;
                 switch (role)
                 {
-                    case "system":
-                        role = "System:    ";
+                    case ChatHistory.AuthorRoles.System:
                         Console.ForegroundColor = ConsoleColor.Blue;
                         break;
-                    case "user":
-                        role = "User:      ";
+                    case ChatHistory.AuthorRoles.User:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         break;
-                    case "assistant":
-                        role = "Assistant: ";
+                    case ChatHistory.AuthorRoles.Assistant:
                         Console.ForegroundColor = ConsoleColor.Green;
                         break;
                 }

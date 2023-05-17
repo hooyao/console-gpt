@@ -1,43 +1,70 @@
-#pragma warning disable 8618
-namespace ConsoleGPT
+#pragma warning disable CS8618
+
+namespace ConsoleGPT.Configuration
 {
     /// <summary>
-    /// Configuration options class for interacting with Azure Cognitive Services.
+    /// Configuration options for interacting with OpenAI.
     /// </summary>
     public class AzureCognitiveServicesOptions
     {
+        /// <summary>
+        /// Deployment name
+        /// </summary>
+        public string DeploymentName  { get; set; }
+        
+        /// <summary>
+        /// Access Key
+        /// </summary>
+        public string Key { get; set; }
+        
         /// <summary>
         /// Location/region (e.g. EastUS)
         /// </summary>
         public string Region { get; set; }
 
         /// <summary>
-        /// Access Key
+        /// Endpoint
         /// </summary>
-        public string Key { get; set; }
+        public string Endpoint { get; set; }
 
         /// <summary>
-        /// Default language for speech recognition (speech-to-text).
+        /// Maximum number of tokens to use when calling OpenAI.
         /// </summary>
-        public string SpeechRecognitionLanguage { get; set; }
+        public int MaxTokens { get; set; }
 
         /// <summary>
-        /// Name of the voice to use for speaking (text-to-speech).
+        /// Randomness controls (0.0 - 1.0).
         /// </summary>
-        /// <remarks>
-        /// https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support?tabs=stt-tts#text-to-speech
-        /// </remarks>
-        public string SpeechSynthesisVoiceName { get; set; }
-        
-        /// <summary>
-        /// True to enable style cues when speaking.
-        /// </summary>
-        public bool EnableSpeechStyle { get; set; }
+        public float Temperature { get; set; }
 
         /// <summary>
-        /// Indicates the speaking rate of the text.
-        /// https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice#adjust-prosody
+        /// Diversity (0.0 - 1.0).
         /// </summary>
-        public string Rate { get; set; }
+        public float TopP { get; set; }
+
+        /// <summary>
+        /// How much to penalize new tokens based on existing frequency in the text so far (0.0 - 2.0).
+        /// </summary>
+        public float FrequencyPenalty { get; set; }
+
+        /// <summary>
+        /// How much to penalize new tokens based on whether they appear in the text so far (0.0 - 2.0).
+        /// </summary>
+        public float PresencePenalty { get; set; }
+
+        /// <summary>
+        /// Name of the chat model to use (e.g. text-davinci-002).
+        /// </summary>
+        public string ChatModel { get; set; }
+
+        /// <summary>
+        /// Name of the text model to use (e.g. text-davinci-002).
+        /// </summary>
+        public string TextModel { get; set; }
+
+        /// <summary>
+        /// Initial prompt for the conversation.
+        /// </summary>
+        public string SystemPrompt { get; set; }
     }
 }

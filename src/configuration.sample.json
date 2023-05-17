@@ -1,14 +1,9 @@
 {
   "AzureCognitiveServices": {
+    "DeploymentName": "",
     "Key": "", // dotnet user-secrets set "AzureCognitiveServices:Key" "****"
     "Region": "", // dotnet user-secrets set "AzureCognitiveServices:Region" "****"
-    "SpeechRecognitionLanguage": "en-US",
-    "SpeechSynthesisVoiceName": "en-US-JennyNeural", // For a list of available voices, see https://aka.ms/maker/friendbot/voicenames
-    "EnableSpeechStyle": "false", // TODO: not supported yet after the migration to ChatGPT.
-    "Rate": "+15%", // https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice#adjust-prosody
-  },
-  "OpenAI": {
-    "Key": "", // dotnet user-secrets set "OpenAI:Key" "****"
+    "Endpoint": "",
     "MaxTokens": 1500,
     "Temperature": 0.7, // 0.0 - 1.0
     "FrequencyPenalty": 0, // 0.0 - 2.0
